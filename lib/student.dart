@@ -1,11 +1,7 @@
 class Student {
-  final int id;
-  final String name;
-  final String lastName;
+  int id;
+  String name;
+  String lastname;
 
-  const Student({required this.id, required this.name, required this.lastName});
-
-  Map<String, dynamic> toMap() {
-    return {"id": id, "name": name, "lastName": lastName};
-  }
+  Student({required this.id, required this.name, required this.lastname});
 }
