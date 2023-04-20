@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_management/secondPage.dart';
 import 'package:data_management/studentService.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+// import 'package:path/path.dart';
+import 'package:path/path.dart' as Path;
 import 'student.dart';
 import 'studentServiceFirebase.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,7 +28,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'App de CCOM 4401'),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => MyHomePage(title: "Hello"),
+        "/second": (context) => ExampleSecondPage()
+      },
     );
   }
 }
@@ -48,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   getStudents() async {
-    database = openDatabase(join(await getDatabasesPath(), 'ccom4401.db'),
+    database = openDatabase(Path.join(await getDatabasesPath(), 'ccom4401.db'),
         onCreate: (db, version) {
       return db.execute(
           "CREATE TABLE Students (id INTEGER PRIMARY KEY, name TEXT, lastname TEXT)");
@@ -70,11 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       getStudents();
     });
+    Navigator.pushNamed(context, "/second");
   }
 
   @override
   Widget build(BuildContext context) {
     dynamic fbDB = FirebaseFirestore.instance;
+    dynamic fbAnalytics = FirebaseAnalytics.instance;
     final Stream<QuerySnapshot> _studentStream =
         FirebaseFirestore.instance.collection("students").snapshots();
 
